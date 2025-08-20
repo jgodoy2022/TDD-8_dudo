@@ -1,10 +1,14 @@
 import unittest
+from src.juego.dado import Dado
 
+def test_dado_valor():
+    dado=Dado()
+    v_validos=[1,2,3,4,5,6]
+    valor=dado.tirar()
+    assert valor in v_validos
 
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, False)  # add assertion here
-
-
-if __name__ == '__main__':
-    unittest.main()
+def test_dado_deno():
+    dado=Dado()
+    deno_validos=["As","Tonto","Tren","Cuadra","Quina","Sexto"]
+    valor=dado.tirar()
+    assert dado.deno() in deno_validos
