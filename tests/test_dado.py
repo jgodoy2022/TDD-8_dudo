@@ -10,10 +10,10 @@ def test_dado_valor(mock_valor):
     assert valor ==2
     assert valor in v_validos
 
-@patch('src.juego.dado.random.randint', return_value=3)
+@patch('src.juego.dado.random.randint', return_value=4)
 def test_dado_deno(mock_deno):
     dado=Dado()
     deno_validos=["As","Tonto","Tren","Cuadra","Quina","Sexto"]
     valor=dado.tirar()
-    assert dado.deno() =="Tren"
+    assert dado.deno() =="Cuadra"
     assert dado.deno() in deno_validos
