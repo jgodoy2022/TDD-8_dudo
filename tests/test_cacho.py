@@ -13,3 +13,9 @@ def test_agitar():
 
     for dado in cacho.dados:
         assert dado.valor in v_validos
+
+def test_perder_dado():
+    cacho = Cacho()
+    cacho.perder_dado()
+
+    assert len(cacho.dados) < 5
