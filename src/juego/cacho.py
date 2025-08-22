@@ -12,5 +12,7 @@ class Cacho:
     def agitar(self):
         for dado in self.dados:
             dado.tirar()
-
+    # Funcion para eliminar un dado
+    def perder_dado(self):
+        self.dados.pop()
 
