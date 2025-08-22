@@ -22,11 +22,11 @@ def test_perder_dado():
 
 def test_ganar_dado():
     cacho = Cacho(2)
-    cacho.ganar_dado
+    cacho.ganar_dado()
 
     cacho2 = Cacho(5)
-    cacho2.ganer_dado
+    cacho2.ganar_dado()
 
     assert len(cacho.dados) ==3
-    assert len(cacho.dados) == 5
+    assert len(cacho2.dados) == 5
 
