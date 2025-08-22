@@ -16,3 +16,11 @@ class Cacho:
     def perder_dado(self):
         self.dados.pop()
 
+    def ganar_dado(self):
+        if len(self.dados) == 5:
+            pass
+
+        else:
+            dado=Dado()
+            dado.tirar()
+            self.dados.append(dado)
