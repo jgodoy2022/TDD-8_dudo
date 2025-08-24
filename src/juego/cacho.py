@@ -1,6 +1,9 @@
 from src.juego.dado import Dado
 
 class Cacho:
+    
+    def cantidad_dados(self):
+        return len(self.dados)
 
     # Inicializa el cacho con 5 dados
     def __init__(self, cantidad_dados=5):
