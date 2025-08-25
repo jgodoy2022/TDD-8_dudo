@@ -1,7 +1,5 @@
 import sys
 sys.path.append('')
-from src.juego.cacho import Cacho
-from src.juego.dado import Dado
 
 class ContadorPintas:
     def __init__(self):
