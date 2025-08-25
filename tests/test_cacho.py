@@ -16,10 +16,15 @@ def test_agitar():
         assert dado.valor in v_validos
 
 def test_perder_dado():
-    cacho = Cacho()
+    cacho = Cacho(5)
     cacho.perder_dado()
+    assert len(cacho.dados) == 4
 
-    assert len(cacho.dados) < 5
+    cacho2 = Cacho(5)
+    cacho2.dados_extra=2
+    cacho2.perder_dado()
+    assert len(cacho2.dados) == 5
+    assert cacho2.dados_extra == 1
 
 def test_ganar_dado():
     cacho = Cacho(2)
