@@ -9,6 +9,6 @@ class ContadorPintas:
         contador = 0
         for c in cachos:
             for d in c.dados:
-                if d.deno() == pinta:
+                if d.deno() == pinta or d.deno() == "As":
                     contador += 1
         return contador
