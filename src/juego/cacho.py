@@ -8,6 +8,7 @@ class Cacho:
     # Inicializa el cacho con 5 dados
     def __init__(self, cantidad_dados=5):
         self.dados = []
+        self.dados_extra = 0
         for _ in range(cantidad_dados):
             self.dados.append(Dado())
 
