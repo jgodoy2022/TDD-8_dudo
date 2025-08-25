@@ -25,7 +25,7 @@ class Cacho:
 
     def ganar_dado(self):
         if len(self.dados) == 5:
-            pass
+            self.dados_extra += 1
 
         else:
             dado=Dado()
