@@ -29,10 +29,13 @@ def test_perder_dado():
 def test_ganar_dado():
     cacho = Cacho(2)
     cacho.ganar_dado()
+    assert len(cacho.dados) ==3
 
     cacho2 = Cacho(5)
     cacho2.ganar_dado()
-
-    assert len(cacho.dados) ==3
     assert len(cacho2.dados) == 5
+    assert cacho2.dados_extra == 1
+
+    cacho2.ganar_dado()
+    assert cacho2.dados_extra == 2
 
