@@ -5,6 +5,7 @@ from src.juego.dado import Dado
 def test_cacho_inicio():
     cacho = Cacho()
     assert len(cacho.dados) == 5
+    assert hasattr(cacho,"dados_extra")
 
 def test_agitar():
     v_validos = [1, 2, 3, 4, 5, 6]
