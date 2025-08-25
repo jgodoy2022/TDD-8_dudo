@@ -18,7 +18,10 @@ class Cacho:
             dado.tirar()
     # Funcion para eliminar un dado
     def perder_dado(self):
-        self.dados.pop()
+        if len(self.dados) > 0 and self.dados_extra == 0:
+            self.dados.pop()
+        elif self.dados_extra > 0:
+            self.dados_extra -= 1
 
     def ganar_dado(self):
         if len(self.dados) == 5:
