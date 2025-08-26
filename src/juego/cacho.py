@@ -9,6 +9,8 @@ class Cacho:
     def __init__(self, cantidad_dados=5):
         self.dados = []
         self.dados_extra = 0
+        self.visible = True
+        self.visible_demas = False
         for _ in range(cantidad_dados):
             self.dados.append(Dado())
 
@@ -32,3 +34,19 @@ class Cacho:
             dado=Dado()
             dado.tirar()
             self.dados.append(dado)
+
+    # Funcion mostrar cacho
+    def mostrar(self):
+        self.visible = True
+
+    # Funcion ocultar cacho
+    def ocultar(self):
+        self.visible = False
+
+    # Funcion mostrar resto de cachos
+    def mostrar_demas(self):
+        self.visible_demas = True
+
+    # Funcion ocultar resto de cachos
+    def ocultar_demas(self):
+        self.visible_demas = False
