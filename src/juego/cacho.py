@@ -23,6 +23,7 @@ class Cacho:
         elif self.dados_extra > 0:
             self.dados_extra -= 1
 
+    # Funcion para ganar dado
     def ganar_dado(self):
         if len(self.dados) == 5:
             self.dados_extra += 1
