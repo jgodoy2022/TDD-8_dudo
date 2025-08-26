@@ -53,7 +53,7 @@ def test_visibilidad():
     assert cacho.visible is True
 
     # Cambiar visible_demas
-    cacho.mostrar_a_los_demas()
+    cacho.mostrar_demas()
     assert cacho.visible_demas is True
-    cacho.ocultar_a_los_demas()
+    cacho.ocultar_demas()
     assert cacho.visible_demas is False
