@@ -36,17 +36,9 @@ class Cacho:
             self.dados.append(dado)
 
     # Funcion mostrar cacho
-    def mostrar(self):
-        self.visible = True
-
-    # Funcion ocultar cacho
-    def ocultar(self):
-        self.visible = False
+    def cambiar_mostrar(self):
+        self.visible = not self.visible
 
     # Funcion mostrar resto de cachos
-    def mostrar_demas(self):
-        self.visible_demas = True
-
-    # Funcion ocultar resto de cachos
-    def ocultar_demas(self):
-        self.visible_demas = False
+    def cambiar_mostrar_demas(self):
+        self.visible_demas = not self.visible_demas
