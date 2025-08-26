@@ -39,3 +39,21 @@ def test_ganar_dado():
     cacho2.ganar_dado()
     assert cacho2.dados_extra == 2
 
+def test_visibilidad():
+    cacho = Cacho()
+
+    # Estado inicial
+    assert cacho.visible is True
+    assert cacho.visible_demas is False
+
+    # Cambiar visible
+    cacho.ocultar()
+    assert cacho.visible is False
+    cacho.mostrar()
+    assert cacho.visible is True
+
+    # Cambiar visible_demas
+    cacho.mostrar_a_los_demas()
+    assert cacho.visible_demas is True
+    cacho.ocultar_a_los_demas()
+    assert cacho.visible_demas is False
