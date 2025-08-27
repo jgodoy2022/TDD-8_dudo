@@ -36,6 +36,7 @@ def test_cambio_a_ases(validador):
 
 
 def test_cambio_desde_ases(validador):
+    validador.es_valida(Apuesta(1, 1))  
     validador.es_valida(Apuesta(2, 1))   
-    assert validador.es_valida(Apuesta(4, 6)) is False  
+    assert validador.es_valida(Apuesta(3, 5)) is False  
     assert validador.es_valida(Apuesta(5, 6)) is True   

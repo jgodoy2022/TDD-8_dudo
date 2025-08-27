@@ -28,19 +28,19 @@ class ValidadorApuesta:
             limite = (actual.cantidad // 2) + (1 if actual.cantidad % 2 != 0 else 0)
             if nueva_apuesta.cantidad < limite:
                 return False
-
+        
         elif actual.pinta == 1 and nueva_apuesta.pinta != 1:
             # Cambio desde Ases: cantidad = actual.cantidad * 2 + 1
             limite = actual.cantidad * 2 + 1
             if nueva_apuesta.cantidad < limite:
                 return False
-
+        
         else:
             # Apuesta normal (misma pinta o superior)
             if nueva_apuesta.cantidad < actual.cantidad:
                 return False
             if nueva_apuesta.cantidad == actual.cantidad and nueva_apuesta.pinta <= actual.pinta:
                 return False
-
+        
         self.apuesta_actual = nueva_apuesta
         return True
