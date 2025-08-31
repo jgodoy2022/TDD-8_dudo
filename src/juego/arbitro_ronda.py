@@ -10,3 +10,7 @@ class ArbitroRonda:
     def dudar(self, cachos, cantidad, pinta):
         con = ContadorPintas()
         return con.contar(pinta, cachos) < cantidad
+    
+    def calzar(self, cachos, cantidad, pinta):
+        con = ContadorPintas()
+        return con.contar(pinta, cachos) == cantidad
