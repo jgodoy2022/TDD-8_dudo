@@ -12,5 +12,4 @@ class ArbitroRonda:
     
     # retorna true si la cantidad de pintas en la apuesta coincide exactamente con la cantidad de pintas en los dados y false si no lo hace
     def calzar(self, cachos, cantidad, pinta):
-        con = ContadorPintas()
         return self.contador.contar(pinta, cachos) == cantidad
