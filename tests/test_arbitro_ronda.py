@@ -7,10 +7,12 @@ from src.juego.dado import Dado
 from unittest.mock import patch
 
 @patch('src.juego.dado.random.randint', return_value = 3)
-def test_resultado_duda():
+def test_resultado_duda(mock_valor):
     cachos = []
     for i in range(2):
-        cachos.append(Cacho(2).agitar)
+        c = Cacho(2)
+        c.agitar()
+        cachos.append(c)
     arbitro = ArbitroRonda()
 
     assert arbitro.dudar(cachos, 3, "Tren") is False
