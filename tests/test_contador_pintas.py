@@ -19,6 +19,15 @@ def test_contar_pintas(mock_valor):
 
     assert con.contar("Tonto", cachos) == 5
 
+    cacho1.dados[0].valor = 3
+    cacho1.dados[2].valor = 5
+    cacho2.dados[1].valor = 3
+
+    assert con.contar("Tonto", cachos) == 2
+    assert con.contar("Tren", cachos) == 2
+    assert con.contar("Quina", cachos) == 1
+    assert con.contar("Cuadra", cachos) == 0
+
 @patch('src.juego.dado.random.randint', return_value = 1)
 def test_contar_comodin(mock_valor):
     cacho1 = Cacho(2)
@@ -36,3 +45,11 @@ def test_contar_comodin(mock_valor):
     assert con.contar("Cuadra", cachos) == 4
     assert con.contar("Quina", cachos) == 4
     assert con.contar("Sexto", cachos) == 4
+
+    cacho1.dados[0].valor = 3
+    cacho1.dados[1].valor = 5
+    cacho2.dados[1].valor = 3
+
+    assert con.contar("As", cachos) == 1
+    assert con.contar("Tren", cachos) == 3
+    assert con.contar("Quina", cachos) == 2
