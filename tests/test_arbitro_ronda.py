@@ -38,23 +38,23 @@ def test_resultado_calzar(mock_valor):
         cachos.append(c)
     arbitro = ArbitroRonda()
 
-    assert arbitro.calzar(cachos, 3, "Tren") is False
-    assert arbitro.calzar(cachos, 6, "Tren") is True
-    assert arbitro.calzar(cachos, 2, "Tonto") is False
+    assert arbitro.calzar(cachos, 3, "Tren", cachos[0]) is False
+    assert arbitro.calzar(cachos, 6, "Tren", cachos[0]) is True
+    assert arbitro.calzar(cachos, 2, "Tonto", cachos[0]) is False
 
 
     cachos[0].dados[0].valor = 2
-    assert arbitro.calzar(cachos, 4, "Tren") is False
-    assert arbitro.calzar(cachos, 5, "Tren") is True
-    assert arbitro.calzar(cachos, 1, "Tonto") is True
-    assert arbitro.calzar(cachos, 3, "Tonto") is False
+    assert arbitro.calzar(cachos, 4, "Tren", cachos[0]) is False
+    assert arbitro.calzar(cachos, 5, "Tren", cachos[0]) is True
+    assert arbitro.calzar(cachos, 1, "Tonto", cachos[0]) is True
+    assert arbitro.calzar(cachos, 3, "Tonto", cachos[0]) is False
 
     cachos[0].dados[1].valor = 1
-    assert arbitro.calzar(cachos, 5, "Tren") is True
-    assert arbitro.calzar(cachos, 4, "Tren") is False
-    assert arbitro.calzar(cachos, 2, "Tonto") is True
-    assert arbitro.calzar(cachos, 1, "Tonto") is False
-    assert arbitro.calzar(cachos, 1, "As") is True
+    assert arbitro.calzar(cachos, 5, "Tren", cachos[0]) is True
+    assert arbitro.calzar(cachos, 4, "Tren", cachos[0]) is False
+    assert arbitro.calzar(cachos, 2, "Tonto", cachos[0]) is True
+    assert arbitro.calzar(cachos, 1, "Tonto", cachos[0]) is False
+    assert arbitro.calzar(cachos, 1, "As", cachos[0]) is True
 
 @patch('src.juego.dado.random.randint', return_value = 3)
 def test_es_valido_calzar(mock_valor):
@@ -66,4 +66,8 @@ def test_es_valido_calzar(mock_valor):
     arbitro = ArbitroRonda()
 
     with pytest.raises(CalzarInvalido):
-        arbitro.calzar(cachos, 2, "Tren")
+        arbitro.calzar(cachos, 2, "Tren", cachos[0])
+
+    cachos[0].perder_dado()
+    assert arbitro.calzar(cachos, 2, "Tren", cachos[0]) is False
+    assert arbitro.calzar(cachos, 3, "Tren", cachos[0]) is True
