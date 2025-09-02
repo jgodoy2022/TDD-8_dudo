@@ -5,7 +5,7 @@ from src.juego.validador_apuesta import Apuesta
 
 @pytest.fixture
 def partida():
-    return GestorPartida(["Felipe", "Ana"])
+    return GestorPartida(["YO", "TU"])
 
 
 def test_iniciar_partida(partida):

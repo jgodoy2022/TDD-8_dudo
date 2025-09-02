@@ -1,8 +1,7 @@
 from src.juego.cacho import Cacho
-from src.juego.validador_apuesta import ValidadorApuesta
+from src.juego.validador_apuesta import ValidadorApuesta, Apuesta
 from src.juego.contador_pintas import ContadorPintas
-from src.juego.validador_apuesta import Apuesta
-
+from src.juego.arbitro_ronda import ArbitroRonda, CalzarInvalido
 
 class Jugador:
     def __init__(self, nombre, cantidad_dados=5):
@@ -22,12 +21,12 @@ class GestorPartida:
         self.turno_actual = 0
         self.validador = ValidadorApuesta()
         self.contador = ContadorPintas()
+        self.arbitro = ArbitroRonda()  # 👈 agregado
 
     def jugador_actual(self):
         return self.jugadores[self.turno_actual]
 
     def siguiente_turno(self):
-        # avanzar turno solo entre jugadores con dados
         vivos = [j for j in self.jugadores if j.cacho.cantidad_dados() > 0]
         if not vivos:
             return None
@@ -45,22 +44,39 @@ class GestorPartida:
         return self.validador.es_valida(apuesta)
 
     def procesar_dudo(self):
-        # contar dados según apuesta actual
         apuesta = self.validador.apuesta_actual
         if apuesta is None:
-            return None  # no hay apuesta que dudar
+            return None
 
-        total = self.contador.contar(apuesta.pinta, [j.cacho for j in self.jugadores])
-        if total >= apuesta.cantidad:
-            # el que dudó pierde
-            perdedor = self.jugador_actual()
-        else:
-            # el último que apostó pierde
+        cachos = [j.cacho for j in self.jugadores]
+
+        if self.arbitro.dudar(cachos, apuesta.cantidad, apuesta.pinta):
             idx_apostador = (self.turno_actual - 1) % len(self.jugadores)
             perdedor = self.jugadores[idx_apostador]
+        else:
+            perdedor = self.jugador_actual()
 
         perdedor.perder_dado()
         return perdedor
+
+    def procesar_calzar(self, cacho_calzador):
+        apuesta = self.validador.apuesta_actual
+        if apuesta is None:
+            return None
+
+        cachos = [j.cacho for j in self.jugadores]
+        try:
+            if self.arbitro.calzar(cachos, apuesta.cantidad, apuesta.pinta, cacho_calzador):
+                for j in self.jugadores:
+                    if j.cacho != cacho_calzador and j.cacho.cantidad_dados() > 0:
+                        j.perder_dado()
+                return True
+            else:
+                calzador = [j for j in self.jugadores if j.cacho == cacho_calzador][0]
+                calzador.perder_dado()
+                return False
+        except CalzarInvalido as e:
+            raise e
 
     def juego_terminado(self):
         jugadores_vivos = [j for j in self.jugadores if j.cacho.cantidad_dados() > 0]
