@@ -8,6 +8,7 @@ class Jugador:
     def __init__(self, nombre, cantidad_dados=5):
         self.nombre = nombre
         self.cacho = Cacho(cantidad_dados)
+        self.ronda_obligada = False  # indica si ya usó obligar
 
     def perder_dado(self):
         # El jugador pierde un dado de su cacho
@@ -20,19 +21,21 @@ class Jugador:
 
 class GestorPartida:
     def __init__(self, nombres_jugadores):
-        #Crea jugadores y componentes principales del juego
         self.jugadores = [Jugador(nombre) for nombre in nombres_jugadores]
         self.turno_actual = 0
         self.validador = ValidadorApuesta()
         self.contador = ContadorPintas()
         self.arbitro = ArbitroRonda()
+        self.ronda_especial = {
+            "activo": False,
+            "tipo": None,  # "abierta" o "cerrada"
+            "jugador": None
+        }
 
     def jugador_actual(self):
-        # Retorna el jugador que tiene el turno actual
         return self.jugadores[self.turno_actual]
 
     def siguiente_turno(self):
-        # Avanza al siguiente jugador 
         vivos = [j for j in self.jugadores if j.cacho.cantidad_dados() > 0]
         if not vivos:
             return None
@@ -41,11 +44,31 @@ class GestorPartida:
         return self.jugador_actual()
 
     def iniciar_ronda(self):
-        # Todos los jugadores agitan sus dados y se reinicia la apuesta
         for j in self.jugadores:
             if j.cacho.cantidad_dados() > 0:
                 j.cacho.agitar()
         self.validador.apuesta_actual = None
+
+        # Verificar ronda especial
+        jugador = self.jugador_actual()
+        if jugador.cacho.cantidad_dados() == 1 and not jugador.ronda_obligada:
+            if jugador.cacho.activar_ronda_especial(abierto=True):
+                jugador.ronda_obligada = True
+                self.ronda_especial["activo"] = True
+                self.ronda_especial["tipo"] = "abierta"
+                self.ronda_especial["jugador"] = jugador
+
+    def finalizar_ronda_especial(self):
+        if self.ronda_especial["activo"]:
+            jugador = self.ronda_especial["jugador"]
+            jugador.cacho.ronda_especial_activada = False
+            jugador.cacho.visible = True
+            jugador.cacho.visible_demas = True
+            self.ronda_especial = {
+                "activo": False,
+                "tipo": None,
+                "jugador": None
+            }
 
     def procesar_apuesta(self, apuesta: Apuesta) -> bool:
         # Valida y registra la apuesta del jugador en turno
@@ -102,3 +125,5 @@ class GestorPartida:
         if self.juego_terminado():
             return [j for j in self.jugadores if j.cacho.cantidad_dados() > 0][0]
         return None
+    
+

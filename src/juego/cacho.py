@@ -11,6 +11,8 @@ class Cacho:
         self.dados_extra = 0
         self.visible = True
         self.visible_demas = False
+        self.ronda_especial_activada = False
+        self.ronda_especial_abierta = False
         for _ in range(cantidad_dados):
             self.dados.append(Dado())
 
@@ -42,3 +44,17 @@ class Cacho:
     # Funcion mostrar resto de cachos
     def cambiar_mostrar_demas(self):
         self.visible_demas = not self.visible_demas
+
+    def activar_ronda_especial(self, abierto=True):
+        """Activa la ronda especial si tiene 1 dado y no ha usado obligar."""
+        if len(self.dados) != 1 or self.ronda_especial_activada:
+            return False
+        self.ronda_especial_activada = True
+        self.ronda_especial_abierta = abierto
+        if abierto:
+            self.visible = False
+            self.visible_demas = True
+        else:
+            self.visible = True
+            self.visible_demas = False
+        return True

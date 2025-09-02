@@ -1,7 +1,7 @@
 import pytest
 from src.juego.gestor_partida import GestorPartida
 from src.juego.validador_apuesta import Apuesta
-
+from src.juego.dado import Dado
 
 @pytest.fixture
 def partida():
@@ -47,3 +47,31 @@ def test_juego_termina(partida):
     assert jugador2.cacho.cantidad_dados() == 5
     assert partida.juego_terminado() is True
     assert partida.ganador() == jugador2
+
+def test_ronda_especial_activar():
+    nombres = ["Alice", "Bob"]
+    partida = GestorPartida(nombres)
+
+    # Simular que Alice pierde dados hasta quedar con 1
+    alice = partida.jugadores[0]
+    alice.cacho.dados = [Dado()]  # ✅ correcto
+    alice.cacho.dados[0].valor = 3  # solo 1 dado
+    assert alice.cacho.cantidad_dados() == 1
+
+    partida.iniciar_ronda()
+
+    # Debe activarse la ronda especial
+    assert partida.ronda_especial["activo"] is True
+    assert partida.ronda_especial["tipo"] == "abierta"
+    assert partida.ronda_especial["jugador"] == alice
+
+    # Verificar propiedades de visibilidad
+    assert alice.cacho.visible is False
+    assert alice.cacho.visible_demas is True
+
+    # Finalizar la ronda especial
+    partida.finalizar_ronda_especial()
+    assert partida.ronda_especial["activo"] is False
+    assert alice.cacho.visible is True
+    assert alice.cacho.visible_demas is True
+    assert alice.ronda_obligada is True
