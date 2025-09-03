@@ -38,64 +38,111 @@ def test_ronda_especial_abierta():
     nombres = ["Alice", "Bob"]
     partida = GestorPartida(nombres)
 
-    # Simular que Alice pierde dados hasta quedar con 1
     alice = partida.jugadores[0]
     bob = partida.jugadores[1]
 
-    alice.cacho.dados = [Dado()]  
-    alice.cacho.dados[0].valor = 3  # solo 1 dado
+    # Simular que Alice pierde dados hasta quedar con 1
+    alice.cacho.dados = [Dado()]
+    alice.cacho.dados[0].valor = 3
     assert alice.cacho.cantidad_dados() == 1
 
     partida.iniciar_ronda()
 
-    # Debe activarse la ronda especial
+    # --- Verificar que la ronda especial abierta se activa ---
     assert partida.ronda_especial["activo"] is True
     assert partida.ronda_especial["tipo"] == "abierta"
     assert partida.ronda_especial["jugador"] == alice
 
-    # Verificar propiedades de visibilidad de Alice
+    # Visibilidad de Alice y Bob durante la ronda
     assert alice.cacho.visible is False
     assert alice.cacho.visible_demas is True
-
-    # Verificar propiedades de visibilidad de Bob (los demás jugadores)
     assert bob.cacho.visible is False
     assert bob.cacho.visible_demas is True
 
-    # Finalizar la ronda especial
+    # --- Probar acciones durante la ronda especial ---
+    partida.apuesta_actual = Apuesta(1, "Tren")
+
+    # Bob hace "dudar" usando el arbitro
+    resultado_dudo = partida.arbitro.dudar(
+        [j.cacho for j in partida.jugadores],
+        partida.apuesta_actual.cantidad,
+        partida.apuesta_actual.pinta,
+        ronda_especial=True
+    )
+    assert isinstance(resultado_dudo, bool)
+
+    # Bob hace "calzar" usando el arbitro
+    resultado_calzar = partida.arbitro.calzar(
+        [j.cacho for j in partida.jugadores],
+        partida.apuesta_actual.cantidad,
+        partida.apuesta_actual.pinta,
+        bob.cacho,
+        ronda_especial=True
+    )
+    assert isinstance(resultado_calzar, bool)
+
+    # --- Finalizar la ronda ---
     partida.finalizar_ronda_especial()
     assert partida.ronda_especial["activo"] is False
     assert alice.cacho.visible is True
     assert alice.cacho.visible_demas is False
     assert alice.ronda_obligada is True
-
-    # Bob vuelve a la visibilidad normal
     assert bob.cacho.visible is True
     assert bob.cacho.visible_demas is False
+
 
 def test_ronda_especial_cerrada():
     nombres = ["Alice", "Bob"]
     partida = GestorPartida(nombres)
 
-    # Simular que Alice pierde dados hasta quedar con 1
     alice = partida.jugadores[0]
     bob = partida.jugadores[1]
 
+    # Simular que Alice pierde dados hasta quedar con 1
     alice.cacho.dados = [Dado()]
-    alice.cacho.dados[0].valor = 3  
+    alice.cacho.dados[0].valor = 3
     assert alice.cacho.cantidad_dados() == 1
 
     # Iniciar ronda especial cerrada
     partida.iniciar_ronda(especial_tipo="cerrada")
 
-    # Debe activarse la ronda especial cerrada
+    # --- Verificar que la ronda especial cerrada se activa ---
     assert partida.ronda_especial["activo"] is True
     assert partida.ronda_especial["tipo"] == "cerrada"
     assert partida.ronda_especial["jugador"] == alice
 
-    # Propiedades de visibilidad de Alice
+    # Visibilidad de Alice y Bob
     assert alice.cacho.visible is True
     assert alice.cacho.visible_demas is False
+    assert bob.cacho.visible is False
+    assert bob.cacho.visible_demas is False
 
-    # Propiedades de visibilidad de Bob (los demás jugadores)
-    assert bob.cacho.visible is False  
-    assert bob.cacho.visible_demas is False  
+    # --- Probar acciones durante la ronda especial ---
+    partida.apuesta_actual = Apuesta(1, "Quina")
+
+    # Bob hace "dudar" usando el arbitro
+    resultado_dudo = partida.arbitro.dudar(
+        [j.cacho for j in partida.jugadores],
+        partida.apuesta_actual.cantidad,
+        partida.apuesta_actual.pinta,
+        ronda_especial=True
+    )
+    assert isinstance(resultado_dudo, bool)
+
+    # Bob hace "calzar" usando el arbitro
+    resultado_calzar = partida.arbitro.calzar(
+        [j.cacho for j in partida.jugadores],
+        partida.apuesta_actual.cantidad,
+        partida.apuesta_actual.pinta,
+        bob.cacho,
+        ronda_especial=True
+    )
+    assert isinstance(resultado_calzar, bool)
+
+    partida.finalizar_ronda_especial()
+    assert partida.ronda_especial["activo"] is False
+    assert alice.cacho.visible is True
+    assert alice.cacho.visible_demas is False
+    assert alice.ronda_obligada is True
+    assert bob.cacho.visible is True
+    assert bob.cacho.visible_demas is False
