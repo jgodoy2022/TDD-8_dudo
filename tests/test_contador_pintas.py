@@ -59,3 +59,34 @@ def test_contar_comodin(mock_valor):
     assert con.contar("As", cachos) == 1
     assert con.contar("Tren", cachos) == 3
     assert con.contar("Quina", cachos) == 2
+
+@patch('src.juego.dado.random.randint', return_value=1)
+def test_contar_en_ronda_especial(mock_valor):
+    # Todos los dados salen con valor 1 ("As"), que cuenta como comodín
+    cacho1 = Cacho(2)
+    cacho1.agitar()
+    cacho2 = Cacho(2)
+    cacho2.agitar()
+    cachos = [cacho1, cacho2]
+    con = ContadorPintas()
+
+    # indica si es ronda especial o no
+    ronda_especial = True
+
+    # Los Ases cuentan para cualquier pinta
+    assert con.contar("As", cachos, ronda_especial) == 4
+    assert con.contar("Tonto", cachos, ronda_especial) == 0
+    assert con.contar("Tren", cachos, ronda_especial) == 0
+    assert con.contar("Cuadra", cachos, ronda_especial) == 0
+    assert con.contar("Quina", cachos, ronda_especial) == 0
+    assert con.contar("Sexto", cachos, ronda_especial) == 0
+
+    # Cambiamos algunos valores manualmente
+    cacho1.dados[0].valor = 3   # "Tren"
+    cacho1.dados[1].valor = 5   # "Quina"
+    cacho2.dados[1].valor = 3   # "Tren"
+
+    # Recuento actualizado (considerando comodines)
+    assert con.contar("As", cachos) == 1
+    assert con.contar("Tren", cachos) == 2
+    assert con.contar("Quina", cachos) == 1
