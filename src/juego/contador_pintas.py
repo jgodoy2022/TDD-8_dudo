@@ -10,10 +10,8 @@ class ContadorPintas:
         for c in cachos:
             for d in c.dados:
                 # revisa si corresponde a la pinta o si es comodín
-                if ronda_especial:
-                    if d.deno() == pinta:
-                        contador += 1
-                else:
-                    if d.deno() == pinta or d.deno() == "As":
-                        contador += 1
+                if d.deno() == pinta:
+                    contador += 1
+                elif not ronda_especial and d.deno() == "As":
+                    contador += 1
         return contador
