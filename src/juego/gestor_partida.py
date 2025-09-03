@@ -43,32 +43,60 @@ class GestorPartida:
         self.turno_actual = (idx + 1) % len(vivos)
         return self.jugador_actual()
 
-    def iniciar_ronda(self):
+    def iniciar_ronda(self, especial_tipo=None):
+        """Inicia una ronda normal o especial si corresponde"""
         for j in self.jugadores:
             if j.cacho.cantidad_dados() > 0:
                 j.cacho.agitar()
         self.validador.apuesta_actual = None
 
-        # Verificar ronda especial
         jugador = self.jugador_actual()
+
+        # Activar ronda especial si el jugador tiene 1 dado y no ha usado obligar
         if jugador.cacho.cantidad_dados() == 1 and not jugador.ronda_obligada:
-            if jugador.cacho.activar_ronda_especial(abierto=True):
+            if especial_tipo is None:
+                abierto = True
+            else:
+                abierto = especial_tipo == "abierta"
+
+            if jugador.cacho.activar_ronda_especial(abierto=abierto):
                 jugador.ronda_obligada = True
                 self.ronda_especial["activo"] = True
-                self.ronda_especial["tipo"] = "abierta"
+                self.ronda_especial["tipo"] = "abierta" if abierto else "cerrada"
                 self.ronda_especial["jugador"] = jugador
+
+                # Ajustar visibilidad de todos los jugadores
+                for j in self.jugadores:
+                    if j == jugador:
+                        continue
+                    if abierto:
+                        j.cacho.visible = False
+                        j.cacho.visible_demas = True
+                    else:  # cerrada
+                        j.cacho.visible = False
+                        j.cacho.visible_demas = False
+
+                # Ajustar visibilidad del jugador especial
+                if abierto:
+                    jugador.cacho.visible = False
+                    jugador.cacho.visible_demas = True
+                else:
+                    jugador.cacho.visible = True
+                    jugador.cacho.visible_demas = False
 
     def finalizar_ronda_especial(self):
         if self.ronda_especial["activo"]:
-            jugador = self.ronda_especial["jugador"]
-            jugador.cacho.ronda_especial_activada = False
-            jugador.cacho.visible = True
-            jugador.cacho.visible_demas = True
+            # Resetear todos los jugadores
+            for j in self.jugadores:
+                j.cacho.ronda_especial_activada = False
+                j.cacho.visible = True
+                j.cacho.visible_demas = False
             self.ronda_especial = {
                 "activo": False,
                 "tipo": None,
                 "jugador": None
             }
+
 
     def procesar_apuesta(self, apuesta: Apuesta) -> bool:
         # Valida y registra la apuesta del jugador en turno
