@@ -5,11 +5,15 @@ class ContadorPintas:
     def __init__(self):
         pass
     
-    def contar(self, pinta, cachos) -> int:
+    def contar(self, pinta, cachos, ronda_especial=False) -> int:
         contador = 0
         for c in cachos:
             for d in c.dados:
                 # revisa si corresponde a la pinta o si es comodín
-                if d.deno() == pinta or d.deno() == "As":
-                    contador += 1
+                if ronda_especial:
+                    if d.deno() == pinta:
+                        contador += 1
+                else:
+                    if d.deno() == pinta or d.deno() == "As":
+                        contador += 1
         return contador
