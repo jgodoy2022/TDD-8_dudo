@@ -32,5 +32,7 @@ python -m pytest
 Para correr la cobertura del proyecto hay que ejecutar el siguiente comando en el directorio raiz.
 
 ```bash
-.\run_coverage.ps1
+pytest --cov=src --cov-report=term-missing
+o
+python3 -m pytest --cov=src --cov-report=term-missing
 ```
