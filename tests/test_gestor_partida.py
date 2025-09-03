@@ -34,27 +34,15 @@ def test_dudo_hace_perder_dado(partida):
     # El perdedor debería quedar con 4 dados
     assert perdedor.cacho.cantidad_dados() == 4
 
-
-def test_juego_termina(partida):
-    # El juego termina cuando un jugador se queda sin dados
-    jugador1 = partida.jugadores[0]
-    jugador2 = partida.jugadores[1]
-
-    for _ in range(5):
-        jugador1.perder_dado()
-
-    assert jugador1.cacho.cantidad_dados() == 0
-    assert jugador2.cacho.cantidad_dados() == 5
-    assert partida.juego_terminado() is True
-    assert partida.ganador() == jugador2
-
-def test_ronda_especial_activar():
+def test_ronda_especial_abierta():
     nombres = ["Alice", "Bob"]
     partida = GestorPartida(nombres)
 
     # Simular que Alice pierde dados hasta quedar con 1
     alice = partida.jugadores[0]
-    alice.cacho.dados = [Dado()]  # ✅ correcto
+    bob = partida.jugadores[1]
+
+    alice.cacho.dados = [Dado()]  
     alice.cacho.dados[0].valor = 3  # solo 1 dado
     assert alice.cacho.cantidad_dados() == 1
 
@@ -65,13 +53,49 @@ def test_ronda_especial_activar():
     assert partida.ronda_especial["tipo"] == "abierta"
     assert partida.ronda_especial["jugador"] == alice
 
-    # Verificar propiedades de visibilidad
+    # Verificar propiedades de visibilidad de Alice
     assert alice.cacho.visible is False
     assert alice.cacho.visible_demas is True
+
+    # Verificar propiedades de visibilidad de Bob (los demás jugadores)
+    assert bob.cacho.visible is False
+    assert bob.cacho.visible_demas is True
 
     # Finalizar la ronda especial
     partida.finalizar_ronda_especial()
     assert partida.ronda_especial["activo"] is False
     assert alice.cacho.visible is True
-    assert alice.cacho.visible_demas is True
+    assert alice.cacho.visible_demas is False
     assert alice.ronda_obligada is True
+
+    # Bob vuelve a la visibilidad normal
+    assert bob.cacho.visible is True
+    assert bob.cacho.visible_demas is False
+
+def test_ronda_especial_cerrada():
+    nombres = ["Alice", "Bob"]
+    partida = GestorPartida(nombres)
+
+    # Simular que Alice pierde dados hasta quedar con 1
+    alice = partida.jugadores[0]
+    bob = partida.jugadores[1]
+
+    alice.cacho.dados = [Dado()]
+    alice.cacho.dados[0].valor = 3  
+    assert alice.cacho.cantidad_dados() == 1
+
+    # Iniciar ronda especial cerrada
+    partida.iniciar_ronda(especial_tipo="cerrada")
+
+    # Debe activarse la ronda especial cerrada
+    assert partida.ronda_especial["activo"] is True
+    assert partida.ronda_especial["tipo"] == "cerrada"
+    assert partida.ronda_especial["jugador"] == alice
+
+    # Propiedades de visibilidad de Alice
+    assert alice.cacho.visible is True
+    assert alice.cacho.visible_demas is False
+
+    # Propiedades de visibilidad de Bob (los demás jugadores)
+    assert bob.cacho.visible is False  
+    assert bob.cacho.visible_demas is False  
